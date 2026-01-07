@@ -10,6 +10,11 @@
 *.userosscache
 *.sln.docstates
 *.env
+access_key
+secret_access_key
+iam_role
+terraform*
+.terraform*
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
