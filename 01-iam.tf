@@ -46,3 +46,13 @@ module "iam_test_uers_groups_membership" {
     
     depends_on = [module.iam_test_groups, module.iam_test_users]
 }
+
+module "test_policy" {
+    source = "./modules/iam/policies"
+    iam_policy = {
+        name        = var.iam_test_policy_name
+        path        = var.iam_test_policy_path
+        description = "Policy to list and get users"
+        policy = jsonencode(var.iam_test_policy_policy)
+    }
+}
