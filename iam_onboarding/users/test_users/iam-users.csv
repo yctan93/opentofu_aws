@@ -1,0 +1,4 @@
+name,path,permissions_boundary,force_destroy,create_access_key
+iam-user-1,null,null,false,true
+iam-user-2,/test/,null,false,false
+iam-user-3,/test/,null,false,true
