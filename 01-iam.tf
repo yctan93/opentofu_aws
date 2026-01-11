@@ -27,18 +27,21 @@ locals {
                                 }
 }
 
+# IAM: Groups
 module "iam_test_groups" {
     source = "./modules/iam/group"
     for_each = local.iam_test_groups
     iam_group = each.value
 }
 
+# IAM: Users
 module "iam_test_users" {
     source = "./modules/iam/user"
     for_each = local.iam_test_users
     iam_user = each.value
 }
 
+# IAM: Group Memberships
 module "iam_test_uers_groups_membership" {
     source = "./modules/iam/group_membership"
     for_each = local.iam_test_groups_memberships
@@ -47,12 +50,35 @@ module "iam_test_uers_groups_membership" {
     depends_on = [module.iam_test_groups, module.iam_test_users]
 }
 
+# IAM: Custom Managed Policy
 module "test_policy" {
     source = "./modules/iam/policies"
     iam_policy = {
         name = var.iam_test_policy_name
         path = var.iam_test_policy_path
-        description = "Policy to list and get users"
         policy = jsonencode(var.iam_test_policy_policy)
     }
+    description = "Policy to list and get users"
+}
+
+# IAM: Roles
+data "aws_iam_policy_document" "ec2_test_policy_document" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+module "test_role_assume" {
+    source = "./modules/iam/role"
+    iam_role = {
+        name = "iam_test_role_assume"
+        assume_role_policy = data.aws_iam_policy_document.ec2_test_policy_document.json
+        policy_arn = module.test_policy.policy_info.arn
+    }
+    depends_on = [module.test_policy.policy_info]
 }
