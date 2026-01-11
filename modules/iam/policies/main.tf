@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "policy" {
-    description = var.iam_policy.description
+    description = var.description
     name_prefix = var.iam_policy.name_prefix
     name = var.iam_policy.name
     path = var.iam_policy.path
