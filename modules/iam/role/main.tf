@@ -1,5 +1,15 @@
+data "aws_iam_policy_document" "policy_document" {
+  statement {
+    actions = var.iam_role.policy_document_statement_actions
+    principals {
+      type        = var.iam_role.policy_document_principals.type
+      identifiers = var.iam_role.policy_document_principals.identifiers
+    }
+  }
+}
+
 resource "aws_iam_role" "role" {
-    assume_role_policy = var.iam_role.assume_role_policy
+    assume_role_policy = data.aws_iam_policy_document.policy_document.json
     description = var.description
     force_detach_policies = var.iam_role.force_detach_policies
     max_session_duration = var.iam_role.max_session_duration
