@@ -62,22 +62,15 @@ module "test_policy" {
 }
 
 # IAM: Roles
-data "aws_iam_policy_document" "ec2_test_policy_document" {
-  statement {
-    actions = ["sts:AssumeRole"]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
-  }
-}
-
 module "test_role_assume" {
     source = "./modules/iam/role"
     iam_role = {
         name = "iam_test_role_assume"
-        assume_role_policy = data.aws_iam_policy_document.ec2_test_policy_document.json
+        policy_document_statement_actions = ["sts:AssumeRole"]
+        policy_document_principals = {
+                                        type        = "Service"
+                                        identifiers = ["ec2.amazonaws.com"]
+                                    }
         policy_arn = module.test_policy.policy_info.arn
     }
     depends_on = [module.test_policy.policy_info]
