@@ -16,6 +16,11 @@ variable "ec2" {
             values = list(string)
         }))
     })
+
+    validation {
+        condition     = length(var.ec2.name) > 4 && startswith(var.ec2.name, "ec2-")
+        error_message = "To enforce naming convention, naming should start with \"ec2-\"."
+    }
 }
 
 variable "tags" {
