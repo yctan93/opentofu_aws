@@ -2,7 +2,6 @@ variable "ec2" {
     type = object({
         name = string
         nic_name = string
-        subnet_id = string
         private_ips = list(string)
         instance_type = string
         cpu_options_core_count = number
@@ -21,6 +20,15 @@ variable "ec2" {
         condition     = length(var.ec2.name) > 4 && startswith(var.ec2.name, "ec2-")
         error_message = "To enforce naming convention, naming should start with \"ec2-\"."
     }
+}
+
+variable "subnet_id" {
+    type = string
+}
+
+variable "ec2_user_data" {
+    type = string
+    default = null
 }
 
 variable "tags" {

@@ -13,7 +13,7 @@ data "aws_ami" "ami" {
 }
 
 resource "aws_network_interface" "nic" {
-    subnet_id   = var.ec2.subnet_id
+    subnet_id   = var.subnet_id
     private_ips = var.ec2.private_ips
 
     tags = merge({ Name = var.ec2.nic_name }, var.tags)
@@ -31,6 +31,9 @@ resource "aws_instance" "ec2" {
         core_count       = var.ec2.cpu_options_core_count
         threads_per_core = var.ec2.cpu_options_threads_per_core
     }
+
+    user_data = var.ec2_user_data
+    
     tags = merge({ Name = var.ec2.name }, var.tags)
 }
 
