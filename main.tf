@@ -1,3 +1,7 @@
+locals {
+  config = yamldecode(file("./config/config.yaml"))
+}
+
 terraform {
   required_providers {
     aws = {
@@ -9,7 +13,7 @@ terraform {
   encryption {
     ## Step 1: Add the desired key provider:
     key_provider "pbkdf2" "my_key_provider_name" {
-      passphrase = file("encryption_passphrase")
+      passphrase = local.config.provider.encryptionPassphrase #file("./config/encryption_passphrase")
     }
     
     ## Step 2: Set up your encryption method:
@@ -31,9 +35,9 @@ terraform {
 
 provider "aws" {
   region = "ap-southeast-1"
-  access_key = file("access_key")
-  secret_key = file("secret_access_key")
+  access_key = local.config.provider.accessKey
+  secret_key = local.config.provider.secretAccessKey
   assume_role {
-    role_arn = file("iam_role")
+    role_arn = local.config.provider.iamRole
   }
 }
